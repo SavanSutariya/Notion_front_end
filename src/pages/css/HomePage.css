@@ -1,0 +1,8 @@
+.notion-container {
+  display: flex;
+  /* justify-content:flex-start; */
+  flex-wrap: wrap;
+}
+.notion-container .card {
+  margin: 1vw 1vw;
+}

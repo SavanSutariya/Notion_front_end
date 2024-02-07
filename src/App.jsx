@@ -1,5 +1,13 @@
+import { Routes, Route } from "react-router-dom";
+import HomePage from "./pages/HomePage";
+import NotionPage from "./pages/NotionPage";
 function App() {
-  return <>Hello</>;
+  return (
+    <Routes>
+      <Route path="/" element={<HomePage />} />
+      <Route path="/notion/:page_id" element={<NotionPage />} />
+    </Routes>
+  );
 }
 
 export default App;
