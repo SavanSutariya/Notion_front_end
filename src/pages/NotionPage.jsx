@@ -2,11 +2,14 @@ import { useParams } from "react-router-dom";
 import UserLayout from "../components/layout/UserLayout";
 import { useEffect, useState } from "react";
 import axios from "axios";
+import MDEditor from "@uiw/react-md-editor";
 
 function NotionPage() {
   let params = useParams();
   const [notion, setNotion] = useState({});
+  const [content, setContent] = useState("");
   const [loading, setLoading] = useState(true);
+  const [preview, setPreview] = useState(true);
   const [error, setError] = useState(null);
   useEffect(() => {
     const fetchNotion = async () => {
@@ -16,6 +19,7 @@ function NotionPage() {
           `http://localhost:4000/notion/${params.notion_id}`
         );
         setNotion(response.data);
+        setContent(response.data.content);
       } catch (err) {
         setError(err);
       }
@@ -63,7 +67,7 @@ function NotionPage() {
                 <div className="col-4">tags</div>
                 <div className="col-8">
                   {loading ? (
-                    <span class="placeholder col-12"></span>
+                    <span className="placeholder col-12"></span>
                   ) : (
                     notion.tags.map((tag) => (
                       <span className="badge text-bg-info me-1">{tag}</span>
@@ -77,6 +81,38 @@ function NotionPage() {
             </div>
           </div>
           <hr />
+          {loading ? (
+            <span className="placeholder col-12"></span>
+          ) : (
+            <>
+              {preview ? (
+                <button
+                  onClick={() => setPreview(false)}
+                  className="btn btn-primary"
+                >
+                  Edit
+                </button>
+              ) : (
+                <button
+                  onClick={() => setPreview(true)}
+                  className="btn btn-primary"
+                >
+                  Preview
+                </button>
+              )}
+              {preview ? (
+                <MDEditor.Markdown source={content} />
+              ) : (
+                <MDEditor
+                  value={content}
+                  height={"100vh"}
+                  hideToolbar={true}
+                  preview="edit"
+                  onChange={(value) => setContent(value)}
+                />
+              )}
+            </>
+          )}
         </div>
       </UserLayout>
     </>
