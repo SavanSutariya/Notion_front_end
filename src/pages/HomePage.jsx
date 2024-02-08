@@ -37,7 +37,7 @@ function HomePage() {
                   title={notion.title}
                   created_at={notion.user.username}
                   tags={notion.tags}
-                  notion_id={notion.id}
+                  notion_id={notion.notion_id}
                 />
               ))}
             </div>
