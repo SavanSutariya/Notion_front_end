@@ -5,7 +5,7 @@ function App() {
   return (
     <Routes>
       <Route path="/" element={<HomePage />} />
-      <Route path="/notion/:page_id" element={<NotionPage />} />
+      <Route path="/notion/:notion_id" element={<NotionPage />} />
     </Routes>
   );
 }
