@@ -8,6 +8,8 @@ function NotionPage() {
   let params = useParams();
   const [notion, setNotion] = useState({});
   const [content, setContent] = useState("");
+  const [category, setCategory] = useState("");
+  const [title, setTitle] = useState("");
   const [loading, setLoading] = useState(true);
   const [preview, setPreview] = useState(true);
   const [error, setError] = useState(null);
@@ -20,6 +22,8 @@ function NotionPage() {
         );
         setNotion(response.data);
         setContent(response.data.content);
+        setCategory(response.data.category);
+        setTitle(response.data.title);
       } catch (err) {
         setError(err);
       }
@@ -27,18 +31,39 @@ function NotionPage() {
     };
     fetchNotion();
   }, []);
+  const handleSave = async () => {
+    try {
+      await axios.put(`http://localhost:4000/notion/${params.notion_id}`, {
+        title,
+        content,
+        category,
+      });
+      setNotion({ ...notion, title, content, category });
+    } catch (err) {
+      setError(err);
+    }
+  };
   //
   return (
     <>
       <UserLayout>
         <div className="container">
+          {error && error.message}
           <div className="card my-3">
             <div className="card-header">
               <h1>
                 {loading ? (
                   <span class="placeholder col-4"></span>
                 ) : (
-                  notion.title
+                  <input
+                    value={title}
+                    onChange={(e) => setTitle(e.target.value)}
+                    style={{
+                      border: "none",
+                      background: "none",
+                      width: "100%",
+                    }}
+                  />
                 )}
               </h1>
             </div>
@@ -59,7 +84,17 @@ function NotionPage() {
                   {loading ? (
                     <span class="placeholder col-12"></span>
                   ) : (
-                    notion.category
+                    // invisible input field
+                    <input
+                      type="text"
+                      value={category}
+                      style={{
+                        border: "none",
+                        background: "none",
+                        width: "100%",
+                      }}
+                      onChange={(e) => setCategory(e.target.value)}
+                    />
                   )}
                 </div>
               </div>
@@ -98,6 +133,15 @@ function NotionPage() {
                   className="btn btn-primary"
                 >
                   Preview
+                </button>
+              )}
+              {content === notion.content &&
+              title === notion.title &&
+              category === notion.category ? (
+                ""
+              ) : (
+                <button onClick={handleSave} className="btn btn-primary mx-2">
+                  Save
                 </button>
               )}
               {preview ? (
